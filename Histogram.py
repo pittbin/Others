@@ -20,7 +20,8 @@ if __name__ == '__main__':
     parser.add_option('-e', '--freeE', help='calcualte the free energy', dest='freeE_flag', action='store_true', default=False)
     parser.add_option('-o', '--unit', help='unit, 0:kBT, 1:kcal/mol, 2:kj/mol, default=0', dest='ounit', action='store', type='int', default=0)
     parser.add_option('-t', '--temperature', help='temperature, default=300K', dest='temp', action='store', type='float', default=300.0)
-    parser.add_option('-a', '--alldata', help='coorect results including data outside of [min:max]', dest='all_flag', action='store_true', default=False)    
+    parser.add_option('-a', '--alldata', help='coorect results including data outside of [min:max]', dest='all_flag', action='store_true', default=False)
+    parser.add_option('-r', '--nonormalization', help='do not normalize the histogram', dest='normal_flag', action='store_false', default=True)
 
     (opts, args) = parser.parse_args()
 
@@ -45,7 +46,7 @@ if __name__ == '__main__':
         datarange = None
         
     # calculate the histogram
-    hist_array, bin_edges_array = histogram(datapoints, weights=myweights, bins=opts.nbins, range=datarange, density=True)
+    hist_array, bin_edges_array = histogram(datapoints, weights=myweights, bins=opts.nbins, range=datarange, density=opts.normal_flag)
     hist = hist_array.tolist()
     bin_edges = bin_edges_array.tolist()
 
