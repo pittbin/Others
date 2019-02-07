@@ -70,24 +70,23 @@ if __name__ == '__main__':
                 leftsum += tmpweight
             elif (datapoints[dummyi] > opts.maxbin):
                 rightsum += tmpweight
-        leftsum /= wsum
-        rightsum /= wsum
         moresum = leftsum + rightsum        
         if (moresum > 0.0):
-            binsize = bin_mid[1] - bin_mid[0]            
-            factor = 1.0 - moresum
-            for dummyi in range(len(bin_mid)):
-                hist[dummyi] *= factor
+            binsize = bin_mid[1] - bin_mid[0]
+            if (opts.normal_flag): # resize each bin
+                factor = 1.0 - moresum/wsum
+                for dummyi in range(len(bin_mid)):
+                    hist[dummyi] *= factor
             if (leftsum > 0.0):
-                tmpmid = bin_mid[0] - binsize
-                tmphist = leftsum/binsize
-                bin_mid.insert(0, tmpmid)
-                hist.insert(0, tmphist)
+                tmphist = leftsum
+                if (opts.normal_flag):
+                    tmphist /= (wsum*binsize)
+                hist[0] += tmphist
             if (rightsum > 0.0):
-                tmpmid = bin_mid[-1] + binsize
-                tmphist = rightsum/binsize
-                bin_mid.append(tmpmid)
-                hist.append(tmphist)
+                tmphist = rightsum
+                if (opts.normal_flag):
+                    tmphist /= (wsum*binsize)                
+                hist[-1] += tmphist
         
     # free energy calcualtion
     if (opts.freeE_flag):
